@@ -1,0 +1,22 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/phaser.min.js"></script>
+    <title>Bob Country</title>
+</head>
+<body>
+    
+    <div style="display:flex;">
+      <p style="flex:1;font-size:40px;">Enter your name:</p>
+      <input type="text" id="name" style="margin:20px; flex:1;font-size:40px;">
+      <div id="sub_retry" onClick="initPlayer();" style="background-color:lightgreen; text-align:center; font-size:40px; flex:1; padding:50px;">Submit</div>
+    </div>
+  
+    <div id='game'></div> <!--the game div. need to set size?-->
+     <div style="padding-top:200px; padding-bottom:200px; background-color:lightgreen; text-align:center; font-size:40px;" onclick="hatch();">
+        Lay Egg
+      </div>
+</body>
+<script src="js/game.js" type="text/javascript"></script>
+</html>
