@@ -93,7 +93,7 @@ io.on('connection',function(socket){
         io.sockets.emit('explode',bomb);
       },bomb.timer+100);
       
-      console.log("made bomb"+bomb.id);
+//       console.log("made bomb"+bomb.id);
        
     });
   
