@@ -24,6 +24,10 @@ var deads = [];
 io.on('connection',function(socket){
   
     console.log("connection: " + socket.id);
+  socket.ready = false;
+  socket.on('ready',function() {
+    socket.ready = true;
+  });
 
     socket.on('newplayer',function(name) {
         socket.player = {
@@ -40,6 +44,9 @@ io.on('connection',function(socket){
     });
   
     socket.on('requestupdate',function(player) {
+//       if (!socket.ready) {
+//         return;
+//       }
       if (player === undefined) {
         console.log("undefined player, dropping");
         socket.disconnect();
@@ -90,6 +97,11 @@ io.on('connection',function(socket){
       
       setTimeout(function() {
         delete bombs[bomb.id];
+//         for (var k in Object.keys(io.sockets.clients())) {
+//           if (io.sockets[k].ready===true) {
+//             io.sockets[k].emit('explode',bomb);
+//           }
+//         }
         io.sockets.emit('explode',bomb);
       },bomb.timer+100);
       

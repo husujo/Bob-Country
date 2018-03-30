@@ -7,8 +7,12 @@ var GameState1 = {};
 var player = {};
 var loggedin = false;
 var emitter;
+var emitter2;
 var exploding = [];
 var dead = false;
+var ready = false;
+
+// TODO, wait to recieve any important messages until we completely load the game
 
 // called first
 GameState1.init = function(){
@@ -60,6 +64,8 @@ GameState1.create = function() {
     emitter2.gravity = 0;
     emitter2.makeParticles('egg');
  
+		//ready = true;
+	
     
 };
 
@@ -115,16 +121,21 @@ GameState1.onClick = function(layer,pointer) {
 socket.on('you',function(p) {
   player = p;
   console.log("we are id="+p.id);
+	socket.emit('ready');
 });
 
 socket.on('userleft',function(id) {
-    GameState1.entities[id].destroy();
-    delete GameState1.entities[id];
+		if (GameState1.entities.hasOwnProperty(id)) {
+    	GameState1.entities[id].destroy();
+    	delete GameState1.entities[id];
+		}
 });
 
 
 // this is the game loop.
-GameState1.update = function() {  
+GameState1.update = function() {
+	ready = true;
+		
 //   if (loggedin) {
     // update my coords and send update
 //     console.log("update");
@@ -210,12 +221,17 @@ socket.on('provideupdate',function(ents) {
 });
 
 socket.on('explode',function(bomb) {
+	if (!ready) {
+		return;
+	}
   console.log('bomb exploded!')
   emitter2.x = bomb.x+10;
   emitter2.y = bomb.y+10;
   emitter2.start(true, 600, null, 8);
-  GameState1.entities[bomb.id].destroy();
-  delete GameState1.entities[bomb.id];
+	if (GameState1.entities.hasOwnProperty(bomb.id)) {
+  	GameState1.entities[bomb.id].destroy();
+  	delete GameState1.entities[bomb.id];
+	}
   
 //   console.log("bomb:"+bomb.x+" "+bomb.y);
 //   console.log("me:"+player.x+" "+player.y);
